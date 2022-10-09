@@ -3,9 +3,11 @@ import { Provider } from "inversify-react";
 import React from "react";
 import { Props } from "./props";
 
+type Type="singleton"|"transient";
+
 type Target={
   constructor:Function,
-  type:"singleton"|"transient"
+  type:Type
 }
 
 export const createProvider = (
@@ -56,8 +58,13 @@ export class GlobalContainer extends React.Component<Props> {
 
 export const createContainer = (container = new Container(),standalone=true) => {
   /** make the class accessible across module */
-  const include = (target: any) => {
-    container.bind(target).toSelf().inSingletonScope();
+  const include =(type: Type)=> (target: any) => {
+    if(type==="singleton"){
+      container.bind(target).toSelf().inSingletonScope();
+    }
+    if(type==="transient"){
+      container.bind(target).toSelf().inTransientScope();
+    }
   };
 
   /** connect component with container */
