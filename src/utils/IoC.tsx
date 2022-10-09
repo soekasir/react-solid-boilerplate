@@ -3,17 +3,17 @@ import { Provider } from "inversify-react";
 import React from "react";
 import { Props } from "./props";
 
-type Type="singleton"|"transient";
+type Type = "singleton" | "transient";
 
-type Target={
-  constructor:Function,
-  type:Type
-}
+type Target = {
+  constructor: Function;
+  type?: Type;
+};
 
-export const createProvider = (
-  targets: Target[],
-  standalone=true,
-  container: Container = new Container(),
+const createProvider = (
+  providers: Target[],
+  standalone = true,
+  container: Container = new Container()
 ) => {
   return class NewProvider extends React.Component<Props> {
     constructor(props: Props) {
@@ -22,19 +22,44 @@ export const createProvider = (
     }
 
     bind() {
-      for (let i = 0; i < targets.length; i++) {
-        if(targets[i].type==="singleton"){
-          container.bind(targets[i].constructor).toSelf().inSingletonScope();
+      for (let i = 0; i < providers.length; i++) {
+        if (!providers[i].type || providers[i].type === "singleton") {
+          container.bind(providers[i].constructor).toSelf().inSingletonScope();
         }
-        if(targets[i].type==="transient"){
-          container.bind(targets[i].constructor).toSelf().inTransientScope();
+        if (providers[i].type === "transient") {
+          container.bind(providers[i].constructor).toSelf().inTransientScope();
         }
       }
     }
 
     render() {
-      return <Provider container={container} standalone={standalone}>{this.props.children}</Provider>;
+      return (
+        <Provider container={container} standalone={standalone}>
+          {this.props.children}
+        </Provider>
+      );
     }
+  };
+};
+
+export const createModule = ({
+  providers,
+  standalone = true,
+  container = new Container(),
+  Component,
+}: {
+  providers: Target[];
+  standalone?: boolean;
+  container?: Container;
+  Component: Function;
+}) => {
+  const Provider = createProvider(providers, standalone, container);
+  return function () {
+    return (
+      <Provider>
+        <Component />
+      </Provider>
+    );
   };
 };
 
@@ -52,17 +77,24 @@ export const transient = (target: any) => {
 
 export class GlobalContainer extends React.Component<Props> {
   render() {
-    return <Provider standalone={true} container={container}>{this.props.children}</Provider>;
+    return (
+      <Provider standalone={true} container={container}>
+        {this.props.children}
+      </Provider>
+    );
   }
 }
 
-export const createContainer = (container = new Container(),standalone=true) => {
+export const createContainer = (
+  container = new Container(),
+  standalone = true
+) => {
   /** make the class accessible across module */
-  const include =(type: Type)=> (target: any) => {
-    if(type==="singleton"){
+  const include = (type: Type) => (target: any) => {
+    if (type === "singleton") {
       container.bind(target).toSelf().inSingletonScope();
     }
-    if(type==="transient"){
+    if (type === "transient") {
       container.bind(target).toSelf().inTransientScope();
     }
   };
