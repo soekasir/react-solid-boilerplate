@@ -4,20 +4,38 @@ import { CounterStore } from "./store";
 import { observer } from "mobx-react";
 
 @observer
-class Counter extends React.Component {
+class CounterValue extends React.Component {
   @resolve(CounterStore)
   counter!: CounterStore;
 
   render() {
+    console.log("value render");
+    return <div>count: {this.counter.count}</div>;
+  }
+}
+
+class CounterButton extends React.Component {
+  @resolve(CounterStore)
+  counter!: CounterStore;
+
+  render() {
+    console.log("button render");
     return (
       <div>
-        count: {this.counter.count}
         <button onClick={() => this.counter.increase()}>+</button>
         <button onClick={() => this.counter.decrease()}>-</button>
-        <button onClick={() => this.counter.json()}>json</button>
       </div>
     );
   }
 }
 
-export default Counter
+export default class Counter extends React.Component {
+  render() {
+    return (
+      <div>        
+        <CounterValue />
+        <CounterButton />
+      </div>
+    )
+  }
+}

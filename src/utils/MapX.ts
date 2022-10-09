@@ -18,13 +18,14 @@ export default class MapX<K,V> extends Map {
     return maps;
   }
 
-  filter(fnPredictate:(value:V)=>boolean){
-    const result: V[]=[];
-    for (let key in this) {
-      if(fnPredictate(this.get(key))){
-        result.push(this.get(key))
+
+  filter(fnPredicate:(value:V,key:K)=>boolean): K[]{
+    const result: K[]=[];
+    this.forEach((v,k)=>{
+      if(fnPredicate(v,k)){
+        result.push(k)
       }
-    }
+    })
     return result
   }
 };
