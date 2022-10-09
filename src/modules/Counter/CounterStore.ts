@@ -3,7 +3,7 @@ import { injectable } from "inversify";
 import { singleton } from "../../utils/IoC";
 
 @injectable()
-@singleton
+@singleton //add to global container as singleton
 export class CounterStore {
   count = 0
   
