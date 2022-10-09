@@ -7,7 +7,6 @@ function getStroge(k:string){
 export const getThemeMode=()=>{
   return getStroge('themeMode');
 }
-export const setThemeMode=(mode:'normal'|'dark')=>{
-  console.log(mode)
+export const setThemeMode=(mode:'light'|'dark')=>{
   setStroge('themeMode',mode);
 }

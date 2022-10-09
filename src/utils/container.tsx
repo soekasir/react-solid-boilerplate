@@ -6,10 +6,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const createContainer = (targets:Function[]) => {
+export const createContainer = (targets:Function[], container:Container=new Container()) => {
 
   return class NewContainer extends React.Component<Props> {
-    container = new Container();
+
     constructor(props:Props){
       super(props);
       this.bind();
@@ -17,21 +17,27 @@ export const createContainer = (targets:Function[]) => {
 
     bind() {
       for (let i = 0; i < targets.length; i++) {
-          this.container.bind(targets[i]).toSelf().inSingletonScope();
+        container.bind(targets[i]).toSelf().inSingletonScope();
       }
     }
 
     render() {
       return (
-        <Provider container={this.container}>{this.props.children}</Provider>
+        <Provider container={container}>{this.props.children}</Provider>
       );
     }
   }
 };
 
+/** 
+ * You can copy bellow code to create module container
+ */
+
+/** global container */
 const container=new Container();
 
-export const makeGlobal=(target:Function)=>{
+/** make the class accessible globally */
+export const global=(target:Function)=>{
   container.bind(target).toSelf().inSingletonScope();
 }
 

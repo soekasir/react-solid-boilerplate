@@ -1,9 +1,9 @@
 import { action, observable, makeObservable } from "mobx";
 import { injectable } from "inversify";
-import { makeGlobal } from "../../utils/container";
+import { global } from "../../utils/container";
 
 @injectable()
-@makeGlobal
+@global
 export class CounterStore {
   count = 0
   
