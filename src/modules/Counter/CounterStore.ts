@@ -1,11 +1,9 @@
 import { action, observable, makeObservable } from "mobx";
 import { injectable } from "inversify";
-import { global } from "../../utils/IoC";
-import CounterContainer from ".";
+import { singleton } from "../../utils/IoC";
 
 @injectable()
-@global
-@CounterContainer.include
+@singleton
 export class CounterStore {
   count = 0
   
@@ -16,11 +14,11 @@ export class CounterStore {
       decrease: action
     })
   }
-
+  
   increase() {
     this.count++
   }
-
+  
   decrease() {
     this.count--
   }

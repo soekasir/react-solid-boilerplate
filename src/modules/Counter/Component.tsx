@@ -2,9 +2,7 @@
 import React from "react";
 import { resolve } from "inversify-react";
 import { CounterStore } from "./CounterStore";
-import CounterContainer from ".";
 
-@CounterContainer.component
 export class CounterButton extends React.Component {
   @resolve(CounterStore)
   counter!: CounterStore;

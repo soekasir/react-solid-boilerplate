@@ -3,65 +3,75 @@ import { Provider } from "inversify-react";
 import React from "react";
 import { Props } from "./props";
 
-export const createProvider = (targets:any[], container:Container=new Container()) => {
+type Target={
+  constructor:Function,
+  type:"singleton"|"transient"
+}
 
+export const createProvider = (
+  targets: Target[],
+  standalone=true,
+  container: Container = new Container(),
+) => {
   return class NewProvider extends React.Component<Props> {
-
-    constructor(props:Props){
+    constructor(props: Props) {
       super(props);
       this.bind();
     }
 
     bind() {
       for (let i = 0; i < targets.length; i++) {
-        container.bind(targets[i]).toSelf().inSingletonScope();
+        if(targets[i].type==="singleton"){
+          container.bind(targets[i].constructor).toSelf().inSingletonScope();
+        }
+        if(targets[i].type==="transient"){
+          container.bind(targets[i].constructor).toSelf().inTransientScope();
+        }
       }
     }
 
     render() {
-      return (
-        <Provider container={container}>{this.props.children}</Provider>
-      );
+      return <Provider container={container} standalone={standalone}>{this.props.children}</Provider>;
     }
-  }
+  };
 };
 
 /** global container */
-const container=new Container();
+const container = new Container();
 
 /** make a class accessible globally */
-export const global=(target:any)=>{
+export const singleton = (target: any) => {
   container.bind(target).toSelf().inSingletonScope();
-}
+};
+
+export const transient = (target: any) => {
+  container.bind(target).toSelf().inTransientScope();
+};
 
 export class GlobalContainer extends React.Component<Props> {
   render() {
-    return (
-      <Provider container={container}>{this.props.children}</Provider>
-    );
+    return <Provider standalone={true} container={container}>{this.props.children}</Provider>;
   }
 }
 
-export const createContainer=(container=new Container())=>{
-
-  let TheComponent=()=>null;
-
+export const createContainer = (container = new Container(),standalone=true) => {
   /** make the class accessible across module */
   const include = (target: any) => {
     container.bind(target).toSelf().inSingletonScope();
   };
 
   /** connect component with container */
-  const component=(Component: any) => {
-    TheComponent=Component
+  const connect = (Component: any) => () => {
+    return (
+      <Provider container={container} standalone={standalone}>
+        <Component />
+      </Provider>
+    );
   };
 
-  return ({
-    component,
+  return {
+    connect,
     include,
     container,
-    Component:()=><Provider container={container}>
-    {TheComponent && <TheComponent />}
-  </Provider>
-  })
-}
+  };
+};
