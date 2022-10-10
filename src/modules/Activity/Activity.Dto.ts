@@ -6,11 +6,11 @@ export enum Priority{
   VeryLow="very-low",
 }
 
-export interface CreateActivity {
+export interface CreateActivityDto {
   title: string,
 }
 
-export interface ActivityDto extends CreateActivity {
+export interface ActivityDto extends CreateActivityDto {
   id: number,
   created_at: string,
 }

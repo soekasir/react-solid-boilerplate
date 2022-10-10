@@ -1,6 +1,6 @@
 import axios from "axios";
 import { injectable } from "inversify";
-import { ActivityDto, CreateActivity } from "./Activity.Dto";
+import { ActivityDto, CreateActivityDto } from "./Activity.Dto";
 
 const URL_API=process.env.REACT_APP_TODO_API
 const EMAIL_ACCOUNT_API=process.env.REACT_APP_EMAIL_TODO
@@ -18,7 +18,7 @@ export class ActivityServiceApi {
   async delete(id:number){
     return axios.delete(URL_API+'activity-groups/'+id).then((res)=>res.data)
   }
-  async create(data:CreateActivity){
+  async create(data:CreateActivityDto){
     const addedEmail={...data,email:EMAIL_ACCOUNT_API}
     const res = await axios.post(URL_API + 'activity-groups', addedEmail);
     return res.data as ActivityDto; 

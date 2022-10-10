@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { layoutWidth } from "../../../styles/theme";
 import { IDelete } from "../icons";
-import { ActivityDto } from "../Activity.Store";
+import { ActivityDto } from "../Activity.Dto";
 
 interface PActivity {
   data: ActivityDto;

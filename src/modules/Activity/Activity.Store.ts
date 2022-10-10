@@ -1,6 +1,6 @@
 import { injectable, } from "inversify";
 import { action, makeObservable, observable } from "mobx";
-import { ActivityDto, CreateActivity } from "./Activity.Dto";
+import { ActivityDto, CreateActivityDto } from "./Activity.Dto";
 import { ActivityServiceApi } from "./Activity.Service";
 
 const createActivityStoreClass=(activityService: ActivityServiceApi)=>{
@@ -26,7 +26,7 @@ const createActivityStoreClass=(activityService: ActivityServiceApi)=>{
       })
     }
   
-    async create(data:CreateActivity){
+    async create(data:CreateActivityDto){
       return await this.activityService.create(data).then((res)=>{
         this.all?.unshift(res)
         return res;

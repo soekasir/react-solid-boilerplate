@@ -1,9 +1,10 @@
 import { Component } from "react";
 import { Box, Button, Grid, Modal, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { ActivityStore, CreateActivity } from "../Activity.Store";
+import { ActivityStore } from "../Activity.Store";
 import { resolve } from "inversify-react";
 import AlertService from "../../../components/Alert/AlertService";
+import { CreateActivityDto } from "../Activity.Dto";
 
 const boxStyle = {
   position: "absolute" as "absolute",
@@ -27,7 +28,7 @@ export default class ModalAddActivity extends Component<ModalAddActivityProps> {
   @resolve(AlertService)
   private readonly alert!: AlertService;
 
-  private form: CreateActivity = {
+  private form: CreateActivityDto = {
     title: "",
   };
 
