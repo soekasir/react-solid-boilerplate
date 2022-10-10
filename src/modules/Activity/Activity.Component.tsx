@@ -5,7 +5,7 @@ import { Sticky } from "../../components/Sticky";
 import ModalAddActivity from "./components/ModalAddActivity";
 import emptyPng from'./icons/empty.png';
 import { AlertDelete } from "./components/AlertDelete";
-import ActivityStore from "./Store";
+import {ActivityStore} from "./Activity.Store";
 import { resolve } from 'inversify-react';
 import { observer } from 'mobx-react';
 import AlertService from '../../components/Alert/AlertService';

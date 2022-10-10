@@ -1,6 +1,6 @@
 import React from "react";
-import TodoAppLayout from "../../components/Layouts/TodoAppLayout";
-import ActivityModule from "../../modules/Activity/Module";
+import TodoAppLayout from "../../components/Layouts/TodoApp.Layout";
+import ActivityModule from "../../modules/Activity/Activity.Module";
 
 export default class App extends React.Component {
   render() {

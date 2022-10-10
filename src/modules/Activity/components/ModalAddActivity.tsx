@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Box, Button, Grid, Modal, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import ActivityStore,{  CreateActivity } from "../Store";
+import { ActivityStore, CreateActivity } from "../Activity.Store";
 import { resolve } from "inversify-react";
 import AlertService from "../../../components/Alert/AlertService";
 
