@@ -7,6 +7,11 @@ type LazyPage={
 }
 
 const LazyPages: LazyPage[] = [
+  {
+    path: "/",
+    element: React.lazy(() => import("./App")),
+    name: "Home"
+  }
   // {
   //   path: "/login",
   //   element: React.lazy(() => import("./")),

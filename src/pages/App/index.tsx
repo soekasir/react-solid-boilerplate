@@ -1,12 +1,13 @@
-import { Component } from "react";
+import React from "react";
+import TodoAppLayout from "../../components/Layouts/TodoAppLayout";
+import ActivityModule from "../../modules/Activity/Module";
 
-export default class App extends Component {
-
+export default class App extends React.Component {
   render() {
     return (
-      <div>
-        Hello World
-      </div>
+      <TodoAppLayout>
+        <ActivityModule/>
+      </TodoAppLayout>
     );
   }
 }

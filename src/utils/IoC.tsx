@@ -1,18 +1,18 @@
-import { Container } from "inversify";
+import { Container, interfaces } from "inversify";
 import { Provider } from "inversify-react";
 import React from "react";
 import { Props } from "./props";
 
 type Type = "singleton" | "transient";
 
-type Target = {
-  constructor: Function;
+type Service = {
+  constructor: interfaces.ServiceIdentifier;
   type?: Type;
 };
 
 const createProvider = (
-  providers: Target[],
-  standalone = true,
+  providers: Service[],
+  standalone = false,
   container: Container = new Container()
 ) => {
   return class NewProvider extends React.Component<Props> {
@@ -44,11 +44,11 @@ const createProvider = (
 
 export const createModule = ({
   providers,
-  standalone = true,
+  standalone = false,
   container = new Container(),
   Component,
 }: {
-  providers: Target[];
+  providers: Service[];
   standalone?: boolean;
   container?: Container;
   Component: Function;
@@ -64,21 +64,21 @@ export const createModule = ({
 };
 
 /** global container */
-const container = new Container();
+export const GLOBALCONTAINER = new Container();
 
-/** make a class accessible globally */
-export const singleton = (target: any) => {
-  container.bind(target).toSelf().inSingletonScope();
+/** make a class accessible globally as singleton */
+export const singleton = (Service: any) => {
+  GLOBALCONTAINER.bind(Service).toSelf().inSingletonScope();
 };
-
-export const transient = (target: any) => {
-  container.bind(target).toSelf().inTransientScope();
+/** make a class accessible globally as transient */
+export const transient = (Service: any) => {
+  GLOBALCONTAINER.bind(Service).toSelf().inTransientScope();
 };
 
 export class GlobalContainer extends React.Component<Props> {
   render() {
     return (
-      <Provider standalone={true} container={container}>
+      <Provider standalone={true} container={GLOBALCONTAINER}>
         {this.props.children}
       </Provider>
     );
@@ -90,12 +90,12 @@ export const createContainer = (
   standalone = true
 ) => {
   /** make the class accessible across module */
-  const include = (type: Type) => (target: any) => {
+  const include = (type: Type) => (Service: any) => {
     if (type === "singleton") {
-      container.bind(target).toSelf().inSingletonScope();
+      container.bind(Service).toSelf().inSingletonScope();
     }
     if (type === "transient") {
-      container.bind(target).toSelf().inTransientScope();
+      container.bind(Service).toSelf().inTransientScope();
     }
   };
 
