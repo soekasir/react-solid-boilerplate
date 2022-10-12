@@ -5,25 +5,28 @@ import { Sticky } from "../../components/Sticky";
 import ModalAddActivity from "./components/ModalAddActivity";
 import emptyPng from'./icons/empty.png';
 import { AlertDelete } from "./components/AlertDelete";
-import {ActivityStore} from "./Activity.Store";
-import { resolve } from 'inversify-react';
 import { observer } from 'mobx-react';
-import AlertService from '../../components/Alert/AlertService';
 import ActivityItem from './components/ActivityItem';
+import { ActivityStore } from './Activity.Store';
+import { CreateActivityDto } from './Activity.Dto';
+import { resolve } from 'inversify-react';
+import AlertService from '../../components/Alert/AlertService';
 
-type ActivityComponentState={
+type State={
   isModalAddOpen:boolean,
   deleteId?:number
 }
 
+type Props={ }
+
 @observer
-export default class ActivityComponent extends Component<{},ActivityComponentState> {
+export default class ActivityComponent extends Component<Props,State> {
+  @resolve(AlertService)
+  private readonly alert!:AlertService;
   @resolve(ActivityStore)
   private readonly store!:ActivityStore;
-  @resolve(AlertService)
-  private readonly alert!: AlertService;
 
-  constructor(props:{}){
+  constructor(props:Props){
     super(props)
     this.state={
       isModalAddOpen:false,
@@ -31,12 +34,29 @@ export default class ActivityComponent extends Component<{},ActivityComponentSta
     }
   }
 
+  componentDidMount(): void {
+    this.store.load()
+  }
+
+  create=(form:CreateActivityDto)=>{
+    this.store.create(form).then(()=>{
+      this.alert.create(`berhasil menambahkan activity "${form.title}"`)
+    })
+    .catch(()=>{
+      this.alert.create("gagal menambahkan activity","error")
+    })
+    .finally(()=>{
+      this.setState({isModalAddOpen: false})
+    })
+  }
+
   handleDelete=()=>{
     if(this.state.deleteId){
       this.store.delete(this.state.deleteId)
       .then(()=>{
         this.alert.create("berhasil menghapus activity")
-      }).catch(()=>{
+      })
+      .catch(()=>{
         this.alert.create("gagal menghapus activity","error")
       })
       .finally(()=>{
@@ -51,9 +71,7 @@ export default class ActivityComponent extends Component<{},ActivityComponentSta
         <ModalAddActivity
           open={this.state.isModalAddOpen}
           onClose={() => this.setState({isModalAddOpen: false})}
-          afterSubmit={() => {
-            this.setState({isModalAddOpen: false})
-          }}
+          onSubmit={this.create}
         />
         <AlertDelete
           open={!!this.state.deleteId}

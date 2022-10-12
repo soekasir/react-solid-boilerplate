@@ -1,22 +1,24 @@
 import React from "react";
+import App from "./App";
+import TodoList from "./TodoList";
 
 type LazyPage={
   path: string
-  element: React.LazyExoticComponent<React.ComponentType<any>>
+  element: any
   name: string
 }
 
 const LazyPages: LazyPage[] = [
   {
     path: "/",
-    element: React.lazy(() => import("./App")),
+    element: App,//React.lazy(() => import("./App")),
     name: "Home"
-  }
-  // {
-  //   path: "/login",
-  //   element: React.lazy(() => import("./")),
-  //   name:"Login",
-  // },
+  },
+  {
+    path: "/listitem",
+    element: TodoList,//React.lazy(() => import("./TodoList")),
+    name:"Todo List",
+  },
 ];
 
 export default LazyPages;

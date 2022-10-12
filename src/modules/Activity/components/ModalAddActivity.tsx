@@ -1,9 +1,6 @@
 import { Component } from "react";
 import { Box, Button, Grid, Modal, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { ActivityStore } from "../Activity.Store";
-import { resolve } from "inversify-react";
-import AlertService from "../../../components/Alert/AlertService";
 import { CreateActivityDto } from "../Activity.Dto";
 
 const boxStyle = {
@@ -16,29 +13,16 @@ const boxStyle = {
   p: 2,
 };
 
-interface ModalAddActivityProps {
+interface Props {
   open: boolean;
   onClose: () => void;
-  afterSubmit: () => void;
+  onSubmit: (form:CreateActivityDto)=>void
 }
 
-export default class ModalAddActivity extends Component<ModalAddActivityProps> {
-  @resolve(ActivityStore)
-  private readonly store!: ActivityStore;
-  @resolve(AlertService)
-  private readonly alert!: AlertService;
-
-  private form: CreateActivityDto = {
+export default class ModalAddActivity extends Component<Props> {
+  private readonly form: CreateActivityDto = {
     title: "",
   };
-
-  submit=()=>{
-    this.store.create(this.form).then(()=>{
-      this.alert.create(`berhasil menambahkan activity "${this.form.title}"`)
-    }).finally(()=>{
-      this.props.afterSubmit();
-    })
-  }
 
   render() {
     return (
@@ -58,7 +42,7 @@ export default class ModalAddActivity extends Component<ModalAddActivityProps> {
               variant="contained"
               sx={{ borderRadius: 45, boxShadow: "none" }}
               startIcon={<AddIcon />}
-              onClick={this.submit}
+              onClick={()=>this.props.onSubmit(this.form)}
             >
               create
             </Button>

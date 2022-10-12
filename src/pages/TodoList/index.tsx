@@ -1,12 +1,12 @@
 import React from "react";
 import TodoAppLayout from "../../components/Layouts/TodoApp.Layout";
-import ActivityComponent from "../../modules/Activity/Activity.Component";
+import { TodoComponent } from "../../modules/Todo/Todo.Component";
 
-export default class App extends React.Component {
+export default class TodoList extends React.Component {
   render() {
     return (
       <TodoAppLayout>
-        <ActivityComponent/>
+        <TodoComponent/>
       </TodoAppLayout>
     );
   }

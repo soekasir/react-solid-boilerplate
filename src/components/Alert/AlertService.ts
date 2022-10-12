@@ -1,10 +1,9 @@
 import { AlertColor } from "@mui/material";
-import { injectable } from "inversify";
+import { injectable } from "inversify/lib/annotation/injectable";
 import { makeAutoObservable } from "mobx";
-import { singleton } from "../../utils/IoC";
+
 
 @injectable()
-@singleton
 export default class AlertService{
   message=""
   type:AlertColor="success"

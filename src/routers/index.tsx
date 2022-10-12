@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import { Suspense } from "react";
 import { Route, Routes } from "react-router";
-import Alert from "../components/Alert/Component";
+import Alert from "../components/Alert/Alert.Component";
 import LazyPages from "../pages/Lazy";
 import { theme } from "../styles/theme";
 
